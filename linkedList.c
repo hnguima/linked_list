@@ -8,6 +8,11 @@ int compare(const void *a, const void *b)
 int *sorted(const int arr[], unsigned int n)
 {
 	int *sorted = malloc(n * sizeof(int));
+	if (!sorted)
+	{
+		exit(1);
+	}
+
 	for (unsigned int i = 0; i < n; i++)
 	{
 		sorted[i] = arr[i];
@@ -19,6 +24,11 @@ int *sorted(const int arr[], unsigned int n)
 LinkedListNode *createLinkedListNode(const int data)
 {
 	LinkedListNode *node = malloc(sizeof(LinkedListNode));
+	if (!node)
+	{
+		exit(1);
+	}
+
 	node->data = data;
 	node->prev = NULL;
 	node->next = NULL;
@@ -57,7 +67,7 @@ LinkedListNode *createLinkedList(const int nodes[], const unsigned int nodeCount
 	return head;
 }
 
-void insertLinkedListNode(LinkedListNode *head, const int data)
+void insertLinkedListNode(LinkedListNode *const head, const int data)
 {
 	if (head == NULL)
 	{
@@ -109,13 +119,17 @@ void printLinkedList(const LinkedListNode *const head)
 
 void freeLinkedList(LinkedListNode **head)
 {
-	if ((*head) == NULL)
+	if (!head || !(*head))
 	{
 		return;
 	}
 
 	freeLinkedList(&(*head)->next);
 
-	free(*head);
-	*head = NULL;
+	if ((*head))
+	{
+		free(*head);
+		*head = NULL;
+	}
+	
 }
