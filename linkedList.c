@@ -2,132 +2,120 @@
 
 int compare(const void *a, const void *b)
 {
-  return (*(int *)a - *(int *)b);
+	return (*(int *)a - *(int *)b);
 }
 
 int *sorted(const int arr[], unsigned int n)
 {
-  int *sorted = malloc(n * sizeof(int));
-  for (unsigned int i = 0; i < n; i++)
-  {
-    sorted[i] = arr[i];
-  }
-  qsort(sorted, n, sizeof(int), compare);
-  return sorted;
+	int *sorted = malloc(n * sizeof(int));
+	for (unsigned int i = 0; i < n; i++)
+	{
+		sorted[i] = arr[i];
+	}
+	qsort(sorted, n, sizeof(int), compare);
+	return sorted;
 }
 
 LinkedListNode *createLinkedListNode(const int data)
 {
-  LinkedListNode *node = malloc(sizeof(LinkedListNode));
-  node->data = data;
-  node->prev = NULL;
-  node->next = NULL;
-  return node;
+	LinkedListNode *node = malloc(sizeof(LinkedListNode));
+	node->data = data;
+	node->prev = NULL;
+	node->next = NULL;
+	return node;
 }
 
 LinkedListNode *createLinkedList(const int nodes[], const unsigned int nodeCount)
 {
-  LinkedListNode *head = createLinkedListNode(234); // dummy head
+	LinkedListNode *head = createLinkedListNode(234); // dummy head
 
-  if (!nodes || nodeCount == 0)
-  {
-    return head;
-  }
+	if (!nodes || nodeCount == 0)
+	{
+		return head;
+	}
 
-  // Sort the nodes
-  int *nodesSorted = sorted(nodes, nodeCount);
+	// Sort the nodes
+	int *nodesSorted = sorted(nodes, nodeCount);
 
-  // Create the head node
+	// Create the head node
 
-  // Create aux node to iterate
-  LinkedListNode *current = head;
+	// Create aux node to iterate
+	LinkedListNode *current = head;
 
-  for (int i = 0; i < nodeCount; i++)
-  {
-    LinkedListNode *newNode = createLinkedListNode(nodesSorted[i]);
-    newNode->prev = current;
+	for (int i = 0; i < nodeCount; i++)
+	{
+		LinkedListNode *newNode = createLinkedListNode(nodesSorted[i]);
+		newNode->prev = current;
 
-    current->next = newNode;
-    current = newNode;
-  }
+		current->next = newNode;
+		current = newNode;
+	}
 
-  free(nodesSorted);
-  nodesSorted = NULL;
+	free(nodesSorted);
+	nodesSorted = NULL;
 
-  return head;
+	return head;
 }
 
 void insertLinkedListNode(LinkedListNode *head, const int data)
 {
-  if (head == NULL)
-  {
-    return;
-  }
+	if (head == NULL)
+	{
+		return;
+	}
 
-  LinkedListNode *newNode = createLinkedListNode(data);
-  if (head->next == NULL)
-  {
-    head->next = newNode;
-    newNode->prev = head;
-    return;
-  }
+	LinkedListNode *newNode = createLinkedListNode(data);
+	if (head->next == NULL)
+	{
+		head->next = newNode;
+		newNode->prev = head;
+		return;
+	}
 
-  LinkedListNode *current = head->next;
+	LinkedListNode *current = head;
 
-  while (current->next != NULL && current->data < data)
-  {
-    current = current->next;
-  }
+	while (current->next != NULL && current->next->data < data)
+	{
+		current = current->next;
+	}
 
-  if (current->next || current->data > data)
-  {
-    // prev next = new node
-    current->prev->next = newNode;
+	if (current->next)
+	{
+		current->next->prev = newNode;
+		newNode->next = current->next;
+	}
 
-    // current prev = new node
-    newNode->prev = current->prev;
-    current->prev = newNode;
-
-    // new node next = current
-    newNode->next = current;
-  }
-  else
-  {
-    // current next = new node
-    current->next = newNode;
-
-    // new node prev = current
-    newNode->prev = current;
-  }
+	current->next = newNode;
+	newNode->prev = current;
 }
 
 void printLinkedListRecurse(const LinkedListNode *const head)
 {
-  if (head == NULL)
-  {
-    return;
-  }
+	if (head == NULL)
+	{
+		return;
+	}
 
-  printf("%d ", head->data);
-  printLinkedListRecurse(head->next);
+	printf("%d ", head->data);
+	printLinkedListRecurse(head->next);
 }
 
 void printLinkedList(const LinkedListNode *const head)
 {
-  printf("List: ");
-  printLinkedListRecurse(head->next);
-  printf("\n");
+	printf("List: ");
+	printLinkedListRecurse(head->next);
+	printf("\n");
 }
 
 void freeLinkedList(LinkedListNode **head)
 {
-  if ((*head) == NULL)
-  {
-    return;
-  }
+	if ((*head) == NULL)
+	{
+		return;
+	}
 
-  freeLinkedList(&(*head)->next);
+	freeLinkedList(&(*head)->next);
 
-  free(*head);
-  *head = NULL;
+	free(*head);
+	*head = NULL;
 }
